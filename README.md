@@ -15,6 +15,7 @@ In market place search `SQL Database` service and build follow instruction. Reme
 
 ### Demo Web Server Setup
 Install node.js on Azure Ubuntu VM.
+
 1. Create Ubuntu VM and launch
 2. ssh login
 3. `wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash`
