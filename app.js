@@ -72,7 +72,6 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
 
 app.post('/file/:host', function(req, res) {
