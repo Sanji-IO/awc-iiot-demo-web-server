@@ -6,6 +6,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var auth = require('http-auth');
 var fs = require('fs-extra');
+var rimraf = require('rimraf');
 var gulp = require('gulp');
 var gunzip = require('gulp-gunzip');
 var gcallback = require('gulp-callback');
@@ -104,39 +105,55 @@ app.post('/file/:host', function(req, res) {
         return callback(err);
       }
       if (/.json.gz$/.test(uploadFile.name)) {
+        var newName = uploadFile.name.substring(0, uploadFile.name.length - 3);
         gulp.src('/tmp/' + uploadFile.name)
         .pipe(gunzip())
-        .pipe(gulp.dest('/tmp/' + uploadFile.name.substring(0, uploadFile.name.length - 3)))
+        .pipe(gulp.dest('/tmp/' + newName))
         .pipe(gcallback(function() {
-          callback(null, '/tmp/' + uploadFile.name.substring(0, uploadFile.name.length - 3));
+          rimraf.sync('/tmp/' + uploadFile.name);
+          callback(null, '/tmp/' + newName);
         }));
       }
-
-      if (/.json$/.test(uploadFile.name)) {
+      else if (/.json$/.test(uploadFile.name)) {
         callback(null, '/tmp/' + uploadFile.name);
+      }
+      else {
+        rimraf.sync('/tmp/' + uploadFile.name);
+        callback(null, undefined);
       }
     });
   }
   function readFile(path, callback) {
-    fs.readJson(path, function (err, data) {
-      if (err) {
-        return callback(err);
-      }
-      callback(null, data);
-    });
+    if (path) {
+      fs.readJson(path, function (err, data) {
+        if (err) {
+          return callback(err);
+        }
+        rimraf.sync(path);
+        callback(null, data);
+      });
+    }
+    else {
+      callback(null, undefined);
+    }
   }
   function saveToDb(data, callback) {
-    Logs.create({
-      log: data,
-      hostname: hostname
-    })
-    .then(function() {
-      console.log('Create log successfully.');
+    if (data) {
+      Logs.create({
+        log: data,
+        hostname: hostname
+      })
+      .then(function() {
+        console.log('Create log successfully.');
+        callback(null);
+      })
+      .catch(function(err) {
+        callback(err);
+      });
+    }
+    else {
       callback(null);
-    })
-    .catch(function(err) {
-      callback(err);
-    });
+    }
   }
 });
 
