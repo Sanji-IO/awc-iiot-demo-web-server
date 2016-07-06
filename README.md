@@ -1,5 +1,5 @@
 # awc-iiot-demo-web-server
-This is a demo project for awc. The demo server receives ThingsPro upload json data and insert data to SQL Server.
+This is a demo project for AWC. The demo server receives ThingsPro upload json data and insert data to SQL Server.
 
 ## Architecture
 ![Demo Architecture](https://dl.dropboxusercontent.com/u/16706203/demo-architecture.png)
