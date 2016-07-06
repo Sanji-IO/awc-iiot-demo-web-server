@@ -2,7 +2,7 @@
 This is a demo project for awc. The demo server receives ThingsPro upload json data and insert data to SQL Server.
 
 ## Architecture
-[![Demo Architecture](https://dl.dropboxusercontent.com/u/16706203/demo-architecture.png)]
+![Demo Architecture](https://dl.dropboxusercontent.com/u/16706203/demo-architecture.png)
 
 ## Features
 - HTTP basic authentication
@@ -11,7 +11,7 @@ This is a demo project for awc. The demo server receives ThingsPro upload json d
 ## How to Setup
 ### Azure SQL Server
 In market place search `SQL Database` service and build follow instruction. Remember to setup firewall rule.
-[![Azure SQL Server](https://dl.dropboxusercontent.com/u/16706203/sql-server.png)]
+![Azure SQL Server](https://dl.dropboxusercontent.com/u/16706203/sql-server.png)
 
 ### Demo Web Server Setup
 Install node.js on Azure Ubuntu VM.
