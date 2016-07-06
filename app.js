@@ -19,7 +19,7 @@ var fileUpload = require('express-fileupload');
 var async = require('async');
 var DB_SERVER = process.env.DB_SERVER || 'sqlserver';
 var DB_USER = process.env.DB_USER || 'foo';
-var DB_PWD = process.env.DB_USER || '#bar';
+var DB_PWD = process.env.DB_USER || 'bar';
 var DB_HOST = process.env.DB_HOST || 'localhost';
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(DB_SERVER, DB_USER, DB_PWD, {
@@ -88,6 +88,7 @@ app.use(fileUpload());
 
 app.post('/file/:host', function(req, res) {
 	var uploadFile;
+  var hostname = req.params.host;
 
 	if (!req.files) {
 		res.send('No files were uploaded.');
@@ -138,7 +139,8 @@ app.post('/file/:host', function(req, res) {
   }
   function saveToDb(data, callback) {
     Logs.create({
-      log: data
+      log: data,
+      hostname: hostname
     })
     .then(function() {
       console.log('Create log successfully.');
