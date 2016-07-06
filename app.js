@@ -17,12 +17,13 @@ var basic = auth.basic({
 });
 var fileUpload = require('express-fileupload');
 var async = require('async');
-var DB_SERVER = process.env.DB_SERVER || 'localhost';
+var DB_SERVER = process.env.DB_SERVER || 'sqlserver';
 var DB_USER = process.env.DB_USER || 'foo';
-var DB_PWD = process.env.DB_USER || 'bar';
+var DB_PWD = process.env.DB_USER || '#bar';
+var DB_HOST = process.env.DB_HOST || 'localhost';
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize(process.env.DB_SERVER, process.env.DB_USER, process.env.DB_PWD, {
-  host: process.env.DB_HOST,
+var sequelize = new Sequelize(DB_SERVER, DB_USER, DB_PWD, {
+  host: DB_HOST,
   dialect: 'mssql',
   pool: {
     max: 5,
