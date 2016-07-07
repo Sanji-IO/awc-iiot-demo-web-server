@@ -11,7 +11,7 @@ var gulp = require('gulp');
 var gunzip = require('gulp-gunzip');
 var gcallback = require('gulp-callback');
 var basic = auth.basic({
-	realm: "Simon Area.",
+  realm: "Simon Area.",
   file: __dirname + "/.htpasswd"
 });
 var fileUpload = require('express-fileupload');
@@ -24,6 +24,7 @@ var Sequelize = require('sequelize');
 var sequelize = new Sequelize(DB_SERVER, DB_USER, DB_PWD, {
   host: DB_HOST,
   dialect: 'mssql',
+  logging: null,
   pool: {
     max: 5,
     min: 0,
@@ -34,23 +35,11 @@ var sequelize = new Sequelize(DB_SERVER, DB_USER, DB_PWD, {
   }
 });
 var Logs = sequelize.define('logs', {
-  id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-  hostname: { type: Sequelize.STRING },
-  log: {
-    type: Sequelize.TEXT,
-    get: function() {
-      return JSON.parse(this.getDataValue('log'));
-    },
-    set: function(v) {
-      var tmp = null;
-      try {
-        tmp = JSON.stringify(v);
-      } catch(error) {
-        throw new Error('Token model json stringify error.');
-      }
-      return this.setDataValue('log', tmp);
-    }
-  }
+    id: { type: Sequelize.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
+    hostname: { type: Sequelize.STRING },
+    equipment: { type: Sequelize.STRING },
+    tag: { type: Sequelize.STRING },
+    value: { type: Sequelize.STRING }
 });
 sequelize
   .authenticate()
@@ -76,15 +65,15 @@ app.use(bodyParser.urlencoded({
 app.use(fileUpload());
 
 app.post('/file/:host', function(req, res) {
-	var uploadFile;
+  var uploadFile;
   var hostname = req.params.host;
 
-	if (!req.files) {
-		res.send('No files were uploaded.');
-		return;
-	}
+  if (!req.files) {
+    res.send('No files were uploaded.');
+    return;
+  }
 
-	uploadFile = req.files.file;
+  uploadFile = req.files.file;
 
   async.waterfall([
     fileProcess,
@@ -139,17 +128,36 @@ app.post('/file/:host', function(req, res) {
   }
   function saveToDb(data, callback) {
     if (data) {
-      Logs.create({
-        log: data,
-        hostname: hostname
-      })
-      .then(function() {
-        console.log('Create log successfully.');
-        callback(null);
-      })
-      .catch(function(err) {
-        callback(err);
+      var insertArr = data.map(function (row) {
+        var arr = row.tagList.map(function (tagRow) {
+          return {
+            hostname: hostname,
+            equipment: row.equ,
+            tag: tagRow.tag,
+            value: tagRow.value
+          };
+        });
+
+        return [].concat.apply([], arr);
       });
+
+      insertArr = [].concat.apply([], data);
+      var insert = function (rows) {
+        Logs.bulkCreate(rows.splice(0, 20))
+          .then(function() {
+            console.log('Create log successfully.');
+          })
+          .catch(function(err) {
+            console.log('error');
+          });
+
+          // insert more data
+          if (insertArr.length > 0) {
+            insert(rows);
+          }
+      }
+      insert(insertArr);
+      callback(null);
     }
     else {
       callback(null);
