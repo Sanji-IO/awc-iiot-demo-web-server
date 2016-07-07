@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 var app = require('../app');
 
-app.set('port', process.env.PORT || 3000);
+if (process.env.NODE_ENV === 'development') {
+  app.set('port', process.env.PORT || 3000);
+}
+else {
+  app.set('port', process.env.PORT || 80);
+}
 app.set('ip', process.env.IP || '0.0.0.0');
 
 var server = app.listen(app.get('port'), app.get('ip'), function() {
