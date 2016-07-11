@@ -2,19 +2,26 @@
 This is a demo project for AWC. The demo server receives ThingsPro upload json data and insert data to SQL Server.
 
 ## Architecture
-![Demo Architecture](https://dl.dropboxusercontent.com/u/16706203/demo-architecture.png)
+![Demo Architecture](./img/image04.png)
 
-## Features
-- HTTP basic authentication
-- Insert upload data to specific DB.
+### Componments
+- IoT gateway UC-8100 (collect edge devices/sensors data)
+- Headend server (web service for retrieving files and insert to Azure SQL)
+- Azure SQL instance (data warehouse)
+- Spotfire or other applications (data analytics/data mining)
 
-## How to Setup
+## Setup Instructions
+### UC-8100
+Setup equipments/tags and target url (headend server)
+![ThingsPro on UC-8100](./img/image03.png)
+
 ### Azure SQL Server
-In market place search `SQL Database` service and build follow instruction. Remember to setup firewall rule.
-![Azure SQL Server](https://dl.dropboxusercontent.com/u/16706203/sql-server.png)
+1. Create a SQL Server
+2. Set proper username/password and firewall settings
+![Azure SQL Server](./img/image01.png)
 
-### Demo Web Server Setup
-Install node.js on Azure Ubuntu VM.
+### Azure VM (Ubuntu)
+Install node.js on Azure Ubuntu VM. Source code is avaliable at: [https://github.com/Sanji-IO/awc-iiot-demo-web-server](https://github.com/Sanji-IO/awc-iiot-demo-web-server)
 
 1. Create Ubuntu VM and launch
 2. ssh login
@@ -24,3 +31,14 @@ Install node.js on Azure Ubuntu VM.
 6. `git clone https://github.com/Sanji-IO/awc-iiot-demo-web-server.git`
 7. change folder to `awc-iiot-demo-web-server` and execute `npm install --production`
 8. `NODE_ENV=production DB_SERVER=your_db_server_name DB_USER=your_db_username DB_PWD=your_db_password DB_HOST=your_db_hostname npm start`
+
+### Spotfire
+1. Add data tables
+2. Add select Microsoft SQL Server
+3. Enter username / password, press connect and OK
+4. Select table “logs”
+5. Now you could arrange Tables/Line Charts/Pie Charts as you want
+
+![Login](./img/image03.png)
+![Select table](./img/image05.png)
+![Table](./img/image00.png)
