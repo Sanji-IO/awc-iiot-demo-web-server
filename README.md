@@ -13,7 +13,7 @@ This is a demo project for AWC. The demo server receives ThingsPro upload json d
 ## Setup Instructions
 ### UC-8100
 Setup equipments/tags and target url (headend server)
-![ThingsPro on UC-8100](./img/image03.png)
+![ThingsPro on UC-8100](./img/image02.png)
 
 ### Azure SQL Server
 1. Create a SQL Server
