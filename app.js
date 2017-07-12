@@ -141,7 +141,7 @@ app.post('/file/:host', function(req, res) {
         return [].concat.apply([], arr);
       });
 
-      insertArr = [].concat.apply([], data);
+      insertArr = [].concat.apply([], insertArr);
       var insert = function (rows) {
         Logs.bulkCreate(rows.splice(0, 20))
           .then(function() {
