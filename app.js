@@ -39,7 +39,8 @@ var Logs = sequelize.define('logs', {
     hostname: { type: Sequelize.STRING },
     equipment: { type: Sequelize.STRING },
     tag: { type: Sequelize.STRING },
-    value: { type: Sequelize.STRING }
+    value: { type: Sequelize.STRING },
+    at: { type: Sequelize.DATE }
 });
 sequelize
   .authenticate()
@@ -134,7 +135,8 @@ app.post('/file/:host', function(req, res) {
             hostname: hostname,
             equipment: row.equ,
             tag: tagRow.tag,
-            value: tagRow.value
+            value: tagRow.value,
+            at: row.at
           };
         });
 
